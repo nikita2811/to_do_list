@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Details Page{% endblock %}
+
+
+{% block content %}
+
+
+<div class="w-84 bg-white rounded shadow p-4">
+    <h3 class="text-lg font-semibold text-purple-800 mb-4 text-center">{{task.task}}</h3>
+    <span class="text-xs float-right">{{task.status}}</span>
+    <h5 class="text-gray-800 mb-2">{{task.description}}</h5>
+    <span class="text-xs float-right">{{task.deadline}}</span>
+</div>
+
+
+{%endblock %}

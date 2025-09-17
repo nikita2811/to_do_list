@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Create Task</h2>
+            <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+
+
+        <form method="POST" class="space-y-4" action="{% url 'update' task.id %}">
+            {% csrf_token %}
+            <div>
+                <label class="block text-gray-700">Task</label>
+                <input type="text" name="task"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    value="{{task.task}}" />
+            </div>
+            <div>
+                <label class="block text-gray-700">Deadline</label>
+                <input type="datetime-local" name="deadline"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="01/01/2025" value="{{task.deadline|date:'Y-m-d\\TH:i'}}" />
+            </div>
+            <div>
+                <label class="block text-gray-700">Description</label>
+                <textarea rows="4" name="description"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">{{task.description}}</textarea>
+            </div>
+
+            <!-- Input Field -->
+            <div>
+                <label class="block text-gray-700 mb-1">Status</label>
+
+                <input id="dropdownInput" type="text" placeholder="Select Status" name="status"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    value="{{ task.status }}" readonly />
+
+                <!-- Dropdown Menu -->
+                <div id="dropdownList" class="absolute bg-white w-full border border-gray-300 rounded mt-1 hidden">
+                    <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="To-Do">To-Do</div>
+                    <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="In Progress">In Progress</div>
+                    <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="Completed">Completed</div>
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" class="bg-purple-500 hover:bg-purple-600 text-white  py-2 px-4 rounded">
+                    Submit
+                </button>
+            </div>
+    </div>
+
+    </form>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const dropdownInput = document.getElementById('dropdownInput');
+    const dropdownList = document.getElementById('dropdownList');
+
+    // Toggle dropdown visibility when input is clicked
+    dropdownInput.addEventListener('click', () => {
+        dropdownList.classList.toggle('hidden');
+    });
+
+    // Update input value when a dropdown option is clicked
+    dropdownList.querySelectorAll('div[data-value]').forEach(item => {
+        item.addEventListener('click', () => {
+            dropdownInput.value = item.getAttribute('data-value');
+            dropdownList.classList.add('hidden');
+        });
+    });
+
+    // Optional: close dropdown if clicked outside
+    document.addEventListener('click', (event) => {
+        if (!dropdownInput.contains(event.target) && !dropdownList.contains(event.target)) {
+            dropdownList.classList.add('hidden');
+        }
+    });
+</script>
+{% endblock %}

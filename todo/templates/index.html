@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+
+<h1 class="text-3xl font-bold text-center mb-8">Task Board</h1>
+
+
+
+<div class="flex space-x-4 justify-center">
+    {% for task in tasks %}
+    {% if task.status == "To-Do" %}
+    <!-- To Do Column -->
+
+    <div class="w-84 bg-white rounded shadow p-4">
+        <h2 class=" text-lg mb-4">To Do</h2>
+        <div id="todo" class="space-y-2 min-h-[200px]">
+
+            <div class="w-60 bg-blue-100 rounded shadow p-4 flex justify-between items-start space-x-4">
+                <!-- Task Details -->
+                <div>
+                    <a href="{% url 'task_detail' task.id %}">
+                        <h3 class="text-lg font-semibold text-gray-800">{{task.task}}</h3>
+                    </a>
+                    <p class="text-sm text-gray-600 mt-1">{{task.description}}</p>
+                </div>
+                <button class="text-gray-500 hover:text-gray-700"><a href="{% url 'edit' task.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-5.414-9.414a2 2 0 112.828 2.828L11 13l-4 1 1-4 5.586-5.586z" />
+                        </svg>
+                    </a>
+                </button>
+
+                <!-- Delete Button -->
+                <button class="text-gray-500 hover:text-gray-700"><a href="{% url 'delete' task.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
+                </button>
+            </div>
+
+        </div>
+    </div>
+    {%elif task.status == "In Progress" %}
+    <!-- In Progress Column -->
+    <div class="w-84 bg-white rounded shadow p-4">
+        <h2 class="text-lg mb-4">In Progress</h2>
+        <div id="inprogress" class="space-y-2 min-h-[200px]">
+
+            <div class="w-60 bg-yellow-100 rounded shadow p-4 flex justify-between items-start space-x-4">
+                <!-- Task Details -->
+                <div>
+                    <a href="{% url 'task_detail' task.id %}">
+                        <h3 class="text-lg font-semibold text-gray-800">{{task.task}}</h3>
+                        <p class="text-sm text-gray-600 mt-1">{{task.description}}</p>
+                    </a>
+                </div>
+                <button class="text-gray-500 hover:text-gray-700"><a href="{% url 'edit' task.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-5.414-9.414a2 2 0 112.828 2.828L11 13l-4 1 1-4 5.586-5.586z" />
+                        </svg>
+                    </a>
+                </button>
+
+                <!-- Delete Button -->
+                <button class="text-gray-500 hover:text-gray-700"><a href="{% url 'delete' task.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    {%elif task.status == "Completed" %}
+    <!-- Done Column -->
+    <div class="w-84 bg-white rounded shadow p-4">
+        <h2 class=" text-lg mb-4">Completed</h2>
+        <div id="done" class="space-y-2 min-h-[200px]">
+
+            <div class="w-60 bg-green-100 rounded shadow p-4 flex justify-between items-start space-x-4">
+                <!-- Task Details -->
+                <div>
+                    <a href="{% url 'task_detail' task.id %}">
+                        <h3 class="text-lg font-semibold text-gray-800">{{task.task}}</h3>
+                    </a>
+                    <p class="text-sm text-gray-600 mt-1">{{task.description}}</p>
+                </div>
+                <button class="text-gray-500 hover:text-gray-700"><a href="{% url 'edit' task.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-5.414-9.414a2 2 0 112.828 2.828L11 13l-4 1 1-4 5.586-5.586z" />
+                        </svg>
+                    </a>
+                </button>
+
+                <!-- Delete Button -->
+                <button class="text-gray-500 hover:text-gray-700"><a href="{% url 'delete' task.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <!-- content to display if items is empty -->
+    <p>No items found.</p>
+    {% endfor %}
+</div>
+
+
+<script>
+    // Enable drag-and-drop for each column
+    ['todo', 'inprogress', 'done'].forEach(id => {
+        new Sortable(document.getElementById(id), {
+            group: 'kanban',
+            animation: 150,
+            ghostClass: 'bg-gray-300'
+        });
+    });
+</script>
+
+
+
+
+
+{% endblock %}

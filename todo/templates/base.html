@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Django Site{% endblock %}</title>
+
+    <!-- Example CSS (Bootstrap) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+
+<body>
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+
+            <!-- Logo -->
+            <a href="/" class="text-2xl font-bold text-purple-600">
+                To-Do List
+            </a>
+
+            <!-- Navigation -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="http://127.0.0.1:8000/to-do/" class="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="/about" class="text-gray-700 hover:text-blue-600">About</a>
+                <a href="/services" class="text-gray-700 hover:text-blue-600">Services</a>
+                <a href="/contact" class="text-gray-700 hover:text-blue-600">Contact</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <!-- Open Button -->
+            <button id="openModal" class="bg-purple-500 hover:bg-purple-600 text-white  py-2 px-4 rounded">
+                Create Task
+            </button>
+
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-700 focus:outline-none">
+                <!-- Hamburger Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- Page Content -->
+    <div class="container bg-gray-100 p-10">
+        <!-- Modal Background -->
+        <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <!-- Modal Content -->
+            <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Create Task</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+                </div>
+
+                <form method="POST" class="space-y-4" action="{% url 'create' %}">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-gray-700">Task</label>
+                        <input type="text" name="task"
+                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Task" />
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Deadline</label>
+                        <input type="datetime-local" name="deadline"
+                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="01/01/2025" />
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Description</label>
+                        <textarea rows="4" name="description"
+                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Description"></textarea>
+                    </div>
+
+                    <!-- Input Field -->
+                    <div>
+                        <label class="block text-gray-700">Status</label>
+                        <input id="dropdownInput" type="text" placeholder="Select Status" name="status"
+                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownList"
+                            class="absolute bg-white w-half border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"">
+                    <div class=" cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="To-Do">To-Do</div>
+                        <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="In Progress">In Progress
+                        </div>
+                        <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="Completed">Completed</div>
+                    </div>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" class="bg-purple-500 hover:bg-purple-600 text-white  py-2 px-4 rounded">
+                    Submit
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript to toggle modal -->
+    <script>
+        const openModal = document.getElementById('openModal');
+        const closeModal = document.getElementById('closeModal');
+        const modal = document.getElementById('modal');
+
+        openModal.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside the content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }
+        });
+
+
+
+
+        const input = document.getElementById('dropdownInput');
+        const list = document.getElementById('dropdownList');
+        const options = list.querySelectorAll('div');
+
+        // Show/hide dropdown on input click
+        input.addEventListener('click', () => {
+            list.classList.toggle('hidden');
+        });
+
+        // Set input value on option click
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                input.value = option.getAttribute('data-value');
+                list.classList.add('hidden');
+            });
+        });
+
+        // Close dropdown if clicked outside
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target) && !list.contains(e.target)) {
+                list.classList.add('hidden');
+            }
+        });
+    </script>
+    {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300">
+        <div class="container mx-auto px-6 py-10">
+
+            <!-- Top Section -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+                <!-- Brand / Logo -->
+                <div>
+                    <h2 class="text-2xl font-bold text-white">MySite</h2>
+                    <p class="mt-4 text-gray-400">
+                        Building modern web apps with Django & Tailwind CSS.
+                    </p>
+                </div>
+
+                <!-- Navigation -->
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="hover:text-blue-400">Home</a></li>
+                        <li><a href="/about" class="hover:text-blue-400">About</a></li>
+                        <li><a href="/services" class="hover:text-blue-400">Services</a></li>
+                        <li><a href="/contact" class="hover:text-blue-400">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-blue-400">Docs</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Blog</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-blue-400">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M24 4.6a9.9 9.9 0 0 1-2.8.8A4.8 4.8 0 0 0 23.3 3a9.6 9.6 0 0 1-3 1.2 4.8 4.8 0 0 0-8.1 4.4A13.7 13.7 0 0 1 1.7 3.1a4.8 4.8 0 0 0 1.5 6.4 4.8 4.8 0 0 1-2.2-.6v.1a4.8 4.8 0 0 0 3.8 4.7 4.8 4.8 0 0 1-2.2.1 4.8 4.8 0 0 0 4.5 3.4 9.7 9.7 0 0 1-6 2.1c-.4 0-.8 0-1.2-.1a13.6 13.6 0 0 0 7.3 2.1c8.8 0 13.7-7.2 13.7-13.5v-.6A9.7 9.7 0 0 0 24 4.6z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="hover:text-blue-400">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M22.23 0H1.77A1.77 1.77 0 0 0 0 1.77v20.46A1.77 1.77 0 0 0 1.77 24h11.02v-9.3H9.7v-3.6h3.09V8.41c0-3.07 1.87-4.75 4.6-4.75 1.31 0 2.43.1 2.76.14v3.2h-1.9c-1.49 0-1.78.7-1.78 1.75v2.3h3.55l-.46 3.6h-3.09V24h6.06A1.77 1.77 0 0 0 24 22.23V1.77A1.77 1.77 0 0 0 22.23 0" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-700 mt-8 pt-4 text-center">
+                <p class="text-gray-400">&copy; 2025 MySite. All rights reserved.</p>
+            </div>
+
+        </div>
+    </footer>
+
+
+</body>
+
+</html>

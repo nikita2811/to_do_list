@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-*#h=(-q#0j2@b1$3z6g5%q7t66x*kn2lwyuouyqz&*az*ixkx^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['to-do-list-mxlz.onrender.com']
+ALLOWED_HOSTS = ['to-do-list-mxlz.onrender.com','0.0.0.0', 'localhost', '127.0.0.1']
 APPEND_SLASH = False
 
 
@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'to_do_list.urls'
